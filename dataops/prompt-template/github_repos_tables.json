@@ -1,0 +1,673 @@
+=== commits ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "commits"
+  },
+  "description": "Unique Git commits from open source repositories on GitHub, pre-grouped by repositories they appear in.",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "commit",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "tree",
+      "type": "STRING"
+    },
+    {
+      "mode": "REPEATED",
+      "name": "parent",
+      "type": "STRING"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "email",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "time_sec",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "tz_offset",
+          "type": "INTEGER"
+        },
+        {
+          "fields": [
+            {
+              "mode": "NULLABLE",
+              "name": "seconds",
+              "type": "INTEGER"
+            },
+            {
+              "mode": "NULLABLE",
+              "name": "nanos",
+              "type": "INTEGER"
+            }
+          ],
+          "mode": "NULLABLE",
+          "name": "date",
+          "type": "RECORD"
+        }
+      ],
+      "mode": "NULLABLE",
+      "name": "author",
+      "type": "RECORD"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "email",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "time_sec",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "tz_offset",
+          "type": "INTEGER"
+        },
+        {
+          "fields": [
+            {
+              "mode": "NULLABLE",
+              "name": "seconds",
+              "type": "INTEGER"
+            },
+            {
+              "mode": "NULLABLE",
+              "name": "nanos",
+              "type": "INTEGER"
+            }
+          ],
+          "mode": "NULLABLE",
+          "name": "date",
+          "type": "RECORD"
+        }
+      ],
+      "mode": "NULLABLE",
+      "name": "committer",
+      "type": "RECORD"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "subject",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "message",
+      "type": "STRING"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "key",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "value",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "email",
+          "type": "STRING"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "trailer",
+      "type": "RECORD"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "old_mode",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "new_mode",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "old_path",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "new_path",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "old_sha1",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "new_sha1",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "old_repo",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "new_repo",
+          "type": "STRING"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "difference",
+      "type": "RECORD"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "difference_truncated",
+      "type": "BOOLEAN"
+    },
+    {
+      "mode": "REPEATED",
+      "name": "repo_name",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "encoding",
+      "type": "STRING"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "265419190"
+}
+=== contents ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "contents"
+  },
+  "description": "Unique file contents of text files under 1 MiB on the HEAD branch.\n\nCan be joined to [bigquery-public-data:github_repos.files] table using the id columns to identify the repository and file path.",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "id",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "size",
+      "type": "INTEGER"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "content",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "binary",
+      "type": "BOOLEAN"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "copies",
+      "type": "INTEGER"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "281191977"
+}
+=== files ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "files"
+  },
+  "description": "File metadata for all files at HEAD.\n\nJoin with [bigquery-public-data:github_repos.contents] on id columns to search text.",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "repo_name",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "ref",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "path",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "mode",
+      "type": "INTEGER"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "id",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "symlink_target",
+      "type": "STRING"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "2309424945"
+}
+=== languages ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "languages"
+  },
+  "description": "Programming languages by repository as reported by GitHub's https://developer.github.com/v3/repos/#list-languages API",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "repo_name",
+      "type": "STRING"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "bytes",
+          "type": "INTEGER"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "language",
+      "type": "RECORD"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "3325634"
+}
+=== licenses ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "licenses"
+  },
+  "description": "Open source license SPDX code for each repository as detected by https://developer.github.com/v3/licenses/",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "repo_name",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "license",
+      "type": "STRING"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "3325634"
+}
+=== sample_commits ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "sample_commits"
+  },
+  "description": "Sample of [bigquery-public-data:github_repos.commits] table.\n\nSELECT *\nFROM FLATTEN([bigquery-public-data:github_repos.commits], repo_name)\nWHERE repo_name IN (\n    'tensorflow/tensorflow',\n    'facebook/react',\n    'twbs/bootstrap',\n    'apple/swift',\n    'Microsoft/vscode',\n    'torvalds/linux')",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "commit",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "tree",
+      "type": "STRING"
+    },
+    {
+      "mode": "REPEATED",
+      "name": "parent",
+      "type": "STRING"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "email",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "time_sec",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "tz_offset",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "date",
+          "type": "TIMESTAMP"
+        }
+      ],
+      "mode": "NULLABLE",
+      "name": "author",
+      "type": "RECORD"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "email",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "time_sec",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "tz_offset",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "date",
+          "type": "TIMESTAMP"
+        }
+      ],
+      "mode": "NULLABLE",
+      "name": "committer",
+      "type": "RECORD"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "subject",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "message",
+      "type": "STRING"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "key",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "value",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "email",
+          "type": "STRING"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "trailer",
+      "type": "RECORD"
+    },
+    {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "old_mode",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "new_mode",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "old_path",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "new_path",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "old_sha1",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "new_sha1",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "old_repo",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "new_repo",
+          "type": "STRING"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "difference",
+      "type": "RECORD"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "difference_truncated",
+      "type": "BOOLEAN"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "repo_name",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "encoding",
+      "type": "STRING"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "672309"
+}
+=== sample_contents ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "sample_contents"
+  },
+  "description": "Randomly sampled 10% of text file contents from [bigquery-public-data:github_repos.contents].\n\nThis sample set can be joined to [bigquery-public-data:github_repos.sample_files] on the id column.\n\nSELECT\n    c.id id,\n    FIRST(c.size) size,\n    FIRST(c.content) content,\n    FIRST(c.binary) binary,\n    FIRST(c.copies) copies,\n    FIRST(f.repo_name) sample_repo_name,\n    FIRST(f.ref) sample_ref,\n    FIRST(f.path) sample_path,\n    FIRST(f.mode) sample_mode,\n    FIRST(f.symlink_target) sample_symlink_target\nFROM [bigquery-public-data:github_repos.sample_files] f\nJOIN (\n    SELECT * \n    FROM [bigquery-public-data:github_repos.contents] \n    WHERE RAND() < 0.1\n  ) c\nON f.id = c.id\nGROUP BY 1",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "id",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "size",
+      "type": "INTEGER"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "content",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "binary",
+      "type": "BOOLEAN"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "copies",
+      "type": "INTEGER"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "sample_repo_name",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "sample_ref",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "sample_path",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "sample_mode",
+      "type": "INTEGER"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "sample_symlink_target",
+      "type": "STRING"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "2905870"
+}
+=== sample_files ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "sample_files"
+  },
+  "description": "Sampled file metadata for files at HEAD, from the top 400k repositories listed in sample_repos.\n\nThis is a reduced data set from [bigquery-public-data:github_repos.files] to support query experimentation with lower IO costs.\n\nSELECT * \nFROM [bigquery-public-data:github_repos.files]\nWHERE repo_name IN (\n    SELECT repo_name\n    FROM [bigquery-public-data:github_repos.sample_repos]\n    )",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "repo_name",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "ref",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "path",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "mode",
+      "type": "INTEGER"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "id",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "symlink_target",
+      "type": "STRING"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "72879442"
+}
+=== sample_repos ===
+{
+  "tableReference": {
+    "datasetId": "github_repos",
+    "projectId": "bigquery-public-data",
+    "tableId": "sample_repos"
+  },
+  "description": "Top 400k GitHub repositories with more than 2 stars received during Jan-May 2016.\n\nThis set is used to select entries for sample_files and sample_contents.\n\nSELECT\n    repo_name,\n    COUNT(*) watch_count\nFROM\n  [githubarchive:month.201605],\n  [githubarchive:month.201604],\n  [githubarchive:month.201603],\n  [githubarchive:month.201602],\n  [githubarchive:month.201601]\nWHERE type=\"WatchEvent\"\nGROUP BY 1\nHAVING watch_count >= 2\nORDER BY watch_count DESC\nLIMIT 400000",
+  "schema": [
+    {
+      "mode": "NULLABLE",
+      "name": "repo_name",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "watch_count",
+      "type": "INTEGER"
+    }
+  ],
+  "timePartitioning": null,
+  "clustering": null,
+  "numRows": "400000"
+}

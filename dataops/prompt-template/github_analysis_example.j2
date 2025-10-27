@@ -1,0 +1,73 @@
+Github Analysis Examples
+
+To guide your response, you will be provided with a set of Github Analysis examples. Each example shows the user question and the corresponding BigQuery SQL template. All queries must end with `LIMIT 100`.
+
+### Example 1: Top languages by bytes for a repo
+*   **User Question:** "What are the top 10 languages by bytes for `owner/name`?"
+*   **Correct SQL:**
+
+    SELECT *
+    FROM (
+      SELECT lang.name AS language, lang.bytes
+      FROM `bigquery-public-data.github_repos.languages`, UNNEST(language) AS lang
+      WHERE repo_name = 'owner/name'
+      ORDER BY lang.bytes DESC
+      LIMIT 10
+    )
+    LIMIT 100;
+
+### Example 2: Find files containing TODO in a repo
+*   **User Question:** "Find files in `owner/name` that contain the term `TODO` and show a snippet."
+*   **Correct SQL:**
+
+    SELECT f.path, SUBSTR(c.content, 1, 500) AS snippet
+    FROM `bigquery-public-data.github_repos.files` AS f
+    JOIN `bigquery-public-data.github_repos.contents` AS c
+      ON f.id = c.id
+    WHERE f.repo_name = 'owner/name'
+      AND c.binary = FALSE
+      AND LOWER(c.content) LIKE '%todo%'
+    LIMIT 100;
+
+### Example 3: Top committers in the last year for a repo
+*   **User Question:** "Who are the top committers in the last year for `owner/name`?"
+*   **Correct SQL:**
+
+    SELECT author.name AS author_name, COUNT(1) AS commits
+    FROM `bigquery-public-data.github_repos.commits`, UNNEST(repo_name) AS repo
+    WHERE repo = 'owner/name'
+      AND author.time_sec BETWEEN UNIX_SECONDS(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 YEAR)) AND UNIX_SECONDS(CURRENT_TIMESTAMP())
+    GROUP BY author_name
+    ORDER BY commits DESC
+    LIMIT 100;
+
+### Example 4: Top repositories by watch count (sample set)
+*   **User Question:** "Show the top repositories by watch count (sample set)."
+*   **Correct SQL:**
+
+    SELECT repo_name, watch_count
+    FROM `bigquery-public-data.github_repos.sample_repos`
+    ORDER BY watch_count DESC
+    LIMIT 100;
+
+### Example 5: Search sampled contents for a term
+*   **User Question:** "Search sampled contents for the term `security` and show paths/snippets."
+*   **Correct SQL:**
+
+    SELECT sample_repo_name, sample_path, SUBSTR(content, 1, 300) AS snippet
+    FROM `bigquery-public-data.github_repos.sample_contents`
+    WHERE binary = FALSE
+      AND LOWER(content) LIKE '%security%'
+    ORDER BY size DESC
+    LIMIT 100;
+
+### Example 6: License distribution for a small list of repos
+*   **User Question:** "Give license distribution for a small list of repos."
+*   **Correct SQL:**
+
+    SELECT license, COUNT(1) AS repo_count
+    FROM `bigquery-public-data.github_repos.licenses`
+    WHERE repo_name IN ('owner/name', 'another/repo')
+    GROUP BY license
+    ORDER BY repo_count DESC
+    LIMIT 100;

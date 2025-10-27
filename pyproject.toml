@@ -1,0 +1,22 @@
+[project]
+name = "google-adk-hackathon-25"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ag-ui-adk>=0.3.1",
+    "dependency>=0.0.3",
+    "fastapi[standard]>=0.120.0",
+    "google-adk>=1.17.0",
+    "google-auth>=2.41.1",
+    "google-cloud-aiplatform>=1.122.0",
+    "jinja2>=3.1.6",
+    "pydantic>=2.12.3",
+    "python-dotenv>=1.2.1",
+    "streamlit>=1.50.0",
+    "uvicorn[standard]>=0.38.0",
+]
+
+[tool.uv.sources]
+google-adk = { git = "https://github.com/google/adk-python.git" }
