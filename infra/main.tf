@@ -33,6 +33,13 @@ resource "google_project_iam_member" "adk_run_invoker" {
   member  = "serviceAccount:${google_service_account.adk_sa.email}"
 }
 
+# Grant BigQuery Job User role to AI Platform Reasoning Engine service account
+resource "google_project_iam_member" "aiplatform_bq_job_user" {
+  project = var.project_id
+  role    = "roles/bigquery.jobUser"
+  member  = "serviceAccount:service-469827268895@gcp-sa-aiplatform-re.iam.gserviceaccount.com"
+}
+
 # 4️⃣ Create Artifact Registry (for container images)
 resource "google_artifact_registry_repository" "repo" {
   location      = "europe"
