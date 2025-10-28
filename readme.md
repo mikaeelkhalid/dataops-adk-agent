@@ -1,6 +1,6 @@
-# 🔍 DataOps ADK Agent
+# 🔍 DataOps Agent — Turning Data into Actionable Insights with Google’s ADK, VertexAI and Gemini
 
-> A powerful GitHub repository analysis agent built with Google's Agent Development Kit (ADK) that provides natural language insights into open-source repositories using BigQuery.
+> Unlock data intelligence without the writing SQL. The DataOps ADK Agent enables data scientists to extract insights from BigQuery and Cloud Storage using natural language
 
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Google ADK](https://img.shields.io/badge/Google-ADK-4285f4.svg)](https://cloud.google.com/vertex-ai/docs/agent-builder)
