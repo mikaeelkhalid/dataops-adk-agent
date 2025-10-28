@@ -62,6 +62,8 @@ Ask natural language questions about GitHub repositories and get instant insight
 
 ## 🏗️ Architecture
 
+![DataOps Agent Architecture](architecture/AI-DataOps-Agent1.jpg)
+
 This project implements a sophisticated 3-stage AI agent pipeline:
 
 ```mermaid
