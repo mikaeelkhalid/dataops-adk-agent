@@ -10,15 +10,23 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv for faster Python package management
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.local/bin:$PATH"
-
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Install Python dependencies
-RUN uv sync --frozen --no-cache
+# Install Python dependencies with pip so console scripts (streamlit, uvicorn) are installed into /usr/local/bin
+RUN python -m pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir \
+      "ag-ui-adk>=0.3.1" \
+      "dependency>=0.0.3" \
+      "fastapi[standard]>=0.120.0" \
+      "google-adk>=1.17.0" \
+      "google-auth>=2.41.1" \
+      "google-cloud-aiplatform>=1.122.0" \
+      "jinja2>=3.1.6" \
+      "pydantic>=2.12.3" \
+      "python-dotenv>=1.2.1" \
+      "streamlit>=1.50.0" \
+      "uvicorn[standard]>=0.38.0"
 
 # Copy application code
 COPY app/ ./app/
@@ -31,7 +39,7 @@ USER appuser
 # Expose Streamlit port
 EXPOSE 8501
 
-# Health check
+# Health check (curl is installed above)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
@@ -41,5 +49,5 @@ ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
 ENV STREAMLIT_SERVER_HEADLESS=true
 ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 
-# Run the Streamlit app
-CMD ["uv", "run", "streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Run the Streamlit app directly (console script installed by pip)
+CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
