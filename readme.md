@@ -7,6 +7,7 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B.svg)](https://streamlit.io/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED.svg)](https://www.docker.com/)
 [![Terraform](https://img.shields.io/badge/Terraform-7B42BC.svg)](https://www.terraform.io/)
+[![Vertex AI Agent Engine](https://gcpicons.com/icons/ai_platform)](https://cloud.google.com/vertex-ai?hl=en)
 
 ## 🚀 Quick Start
 
