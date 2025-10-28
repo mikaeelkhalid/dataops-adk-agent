@@ -35,23 +35,25 @@ github_query_generator_agent = LlmAgent(
 # GitHub Repos SQL Explainer Agent
 # Takes the generated SQL from the state and executes it using a tool in dry-run mode and returns the query statistics
 github_query_explainer_agent = LlmAgent(
-    name="TrendsQueryExplainerAgent",
+    name="GithubQueryExplainerAgent",
     model=MODEL_TOOL,
     # This instruction tells the agent how to use the state and the tool.
     instruction="""You are a SQL Explainer agent.
 Your task is to execute the BigQuery SQL query provided in the `{generated_sql}` placeholder in dry run mode.
 Use the explain_query tool to run the query.
 The query is already written; do not modify it. Simply pass it to the tool.
-Read the query results and give insights to the user regarding the query statistics and ask for permissions whether to run it or not.
+Provide query statistics to the user and ask for permissions whether to run it or not. If the user consents, the next agent will execute the query.
+Passe the query statistics and user consent to the next agent. Also pass the original query in the `{generated_sql}` placeholder.
 """,
-    description="Executes the generated SQL query using the execute_bigquery_sql tool in dry run mode.",
+    description="Explains the generated SQL query using the explain_query tool in dry-run mode.",
     tools=[explain_query],
+    output_key="generated_sql",  # Stores output in state['generated_sql']
 )
 
 # GitHub Repos SQL Executor Agent
 # Takes the generated SQL from the state and executes it using a tool.
 github_query_executor_agent = LlmAgent(
-    name="TrendsQueryExecutorAgent",
+    name="GithubExecutorAgent",
     model=MODEL_TOOL,
     # This instruction tells the agent how to use the state and the tool.
     instruction="""You are a SQL execution agent.
@@ -71,7 +73,6 @@ print(github_query_executor_agent.instruction)
 root_agent = SequentialAgent(
     name="GithubAnalysisAgent",
     sub_agents=[github_query_generator_agent, github_query_explainer_agent, github_query_executor_agent],
-    description="""A three-step pipeline that first generates a SQL query for Github Repos , then dry run it and ask for user permissions to execute it wait
-    for the user consent before executing the query. Always ask the user whether the query should be run or not. 
-    Format the output as user friendly markdown format. Separete the SQL query and the interpretation of the results with a horizontal line.""",
+    description="""A three-step pipeline that first generates a SQL query for Github Repos , then dry run it and ask for user permissions to execute it.
+    Then waits for user consent before executing the query and providing insights from the results.""",
 )
