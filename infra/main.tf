@@ -1,4 +1,4 @@
-# 1️⃣ Enable required APIs
+# Enable required APIs
 resource "google_project_service" "enabled_apis" {
   for_each = toset([
     "run.googleapis.com",
@@ -14,13 +14,13 @@ resource "google_project_service" "enabled_apis" {
   service = each.key
 }
 
-# 2️⃣ Create a service account for Cloud Run
+# Create a service account for Cloud Run
 resource "google_service_account" "adk_sa" {
   account_id   = "adk-dataops-sa"
   display_name = "ADK DataOps Service Account"
 }
 
-# 3️⃣ Grant IAM roles
+# Grant IAM roles
 resource "google_project_iam_member" "adk_bq_user" {
   project = var.project_id
   role    = "roles/bigquery.user"
@@ -40,7 +40,7 @@ resource "google_project_iam_member" "aiplatform_bq_job_user" {
   member  = "serviceAccount:service-469827268895@gcp-sa-aiplatform-re.iam.gserviceaccount.com"
 }
 
-# 4️⃣ Create Artifact Registry (for container images)
+# Create Artifact Registry (for container images)
 resource "google_artifact_registry_repository" "repo" {
   location      = "europe"
   repository_id = "adk-dataops-repo"
@@ -55,41 +55,52 @@ resource "google_storage_bucket" "default" {
   force_destroy = true
 }
 
-# # 5️⃣ Create BigQuery dataset
-# resource "google_bigquery_dataset" "adk_demo" {
-#   dataset_id  = "adk_demo"
-#   description = "Demo dataset for DataOps Assistant"
-#   location    = "US"
-# }
+
+# Deploy Cloud Run service (container to be built later)
+resource "google_cloud_run_service" "adk_service" {
+  name     = "adk-dataops-v4"
+  location = "europe-west4"
+
+  template {
+    spec {
+      service_account_name = google_service_account.adk_sa.email
+      timeout_seconds = 300 # Increase timeout to 300 seconds
+      containers {
+        image = "europe-docker.pkg.dev/qwiklabs-gcp-00-a452125a4cae/adk-dataops-repo/adk-dataops:latest"
+        ports {
+          container_port = 8501
+        }
+      }
+    }
+  }
+
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+
+  depends_on = [google_project_service.enabled_apis]
+}
+
+# Allow unauthenticated access (for demo)
+resource "google_cloud_run_service_iam_member" "public_invoker" {
+  location = "europe-west4"
+  service  = google_cloud_run_service.adk_service.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
 
 
-# 6️⃣ Deploy Cloud Run service (container to be built later)
-# resource "google_cloud_run_service" "adk_service" {
-#   name     = var.service_name
-#   location = var.region
+# Grant Cloud Run service account Agent Engine role
+resource "google_project_iam_member" "cr_role" {
+  project = var.project_id
+  role    = "roles/aiplatform.admin"
+  member  = "serviceAccount:${google_service_account.adk_sa.email}"
+}
 
-#   template {
-#     spec {
-#       service_account_name = google_service_account.adk_sa.email
-#       containers {
-#         image = "us-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.repo.repository_id}/adk-dataops:latest"
-#         ports {
-#           container_port = 8080
-#         }
-#       }
-#     }
-#   }
-
-#   traffic {
-#     percent         = 100
-#     latest_revision = true
-#   }
-# }
-
-# # 7️⃣ Allow unauthenticated access (for demo)
-# resource "google_cloud_run_service_iam_member" "public_invoker" {
-#   location = var.region
-#   service  = google_cloud_run_service.adk_service.name
-#   role     = "roles/run.invoker"
-#   member   = "allUsers"
-# }
+# Allow the Cloud Run service account to use Vertex AI Reasoning Engine
+resource "google_project_iam_member" "adk_aiplatform_user" {
+  project = var.project_id
+  role    = "roles/aiplatform.user"
+  member  = "serviceAccount:${google_service_account.adk_sa.email}"
+}
